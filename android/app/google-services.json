@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402610682153",
+    "project_id": "gift-mate-54748293",
+    "storage_bucket": "gift-mate-54748293.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402610682153:android:62c8e371b020d95902df38",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM2MleAJ7vANZY12hMlfvSn81SOaQ2DFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
