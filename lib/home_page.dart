@@ -15,7 +15,7 @@ class HomePageState extends State<HomePage> {
   // List of screens to display in the bottom navigation bar
   final List<Widget> _screens = [
     const ImportantDatesScreen(), // Screen for important dates
-    const ProfileScreen(),       // Screen for user profile (will create next)
+    const ProfileScreen(), // Screen for user profile (will create next)
   ];
 
   // Function to handle tab changes
@@ -37,10 +37,7 @@ class HomePageState extends State<HomePage> {
             icon: Icon(Icons.calendar_today),
             label: 'Date',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profilo',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profilo'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue, // Customize selected item color

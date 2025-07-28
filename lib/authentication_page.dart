@@ -58,9 +58,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Autenticazione'),
-      ),
+      appBar: AppBar(title: const Text('Autenticazione')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -77,10 +75,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               obscureText: true,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signIn,
-              child: const Text('Accedi'),
-            ),
+            ElevatedButton(onPressed: _signIn, child: const Text('Accedi')),
             ElevatedButton(
               onPressed: _register,
               child: const Text('Registrati'),
