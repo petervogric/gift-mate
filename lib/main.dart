@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'authentication_page.dart';
-import 'important_dates_screen.dart'; // Import the new screen
+import 'home_page.dart'; // Import the new Home Page
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            // Navigate to ImportantDatesScreen after successful login
-            return const ImportantDatesScreen(); // Show important dates
+            // Show HomePage after successful login
+            return const HomePage(); // Show the new Home Page
           }
           return const AuthenticationPage();
         },
@@ -42,10 +42,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// MyHomePage is no longer the main screen after login,
-// but we can keep it as a placeholder or remove it if not needed elsewhere.
-// For now, we'll keep it but it won't be the primary view after login.
-
+// MyHomePage is no longer used as the main screen after login.
+// You can remove this class if it's not used elsewhere.
+/*
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -75,10 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Logout'),
             ),
-            // You would typically navigate to other screens from here
           ],
         ),
       ),
     );
   }
 }
+*/
