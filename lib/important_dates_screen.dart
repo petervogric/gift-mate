@@ -402,6 +402,7 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
           .add(dateData); // Use .add() to let Firestore generate a unique ID
 
       if (mounted) {
+        // Check if the widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Data importante salvata con successo!'),
@@ -410,10 +411,12 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
       }
 
       if (mounted) {
+        // Check if the widget is still mounted
         Navigator.of(context).pop(); // Close the dialog after successful save
       }
     } catch (e) {
       if (mounted) {
+        // Check if the widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Errore nel salvataggio della data: \$e')),
         );

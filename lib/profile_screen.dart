@@ -51,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: IconButton(
                         icon: const Icon(Icons.edit, color: Colors.white),
                         onPressed: () {
-                          // TODO: Implement profile picture update
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
@@ -78,9 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: const InputDecoration(
                 hintText: 'Inserisci il tuo nome',
               ),
-              onChanged: (value) {
-                // TODO: Implement display name update
-              },
+              onChanged: (value) {},
             ),
             const SizedBox(height: 16),
 
@@ -95,7 +92,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Change Password
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement change password functionality
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Funzionalità non ancora implementata'),
@@ -119,7 +115,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Delete Account (Optional, use with caution)
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement delete account functionality (handle re-authentication, etc.)
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Funzionalità non ancora implementata'),
