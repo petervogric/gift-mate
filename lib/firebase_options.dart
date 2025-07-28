@@ -71,5 +71,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'gift-mate-54748293.firebasestorage.app',
     iosBundleId: 'gift-mate.app',
   );
-
 }
