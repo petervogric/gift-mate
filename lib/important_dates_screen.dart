@@ -33,7 +33,8 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  Map<DateTime, List<String>> _events = {};
+  Map<DateTime, List<Map<String, dynamic>>> _events =
+      {}; // Changed to store full event details
 
   @override
   void dispose() {
@@ -45,8 +46,30 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
     super.dispose();
   }
 
-  List<String> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
+  List<Map<String, dynamic>> _getEventsForDay(DateTime day) {
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    return _events[normalizedDay] ?? [];
+  }
+
+  // New method to get all events for the focused month
+  List<Map<String, dynamic>> _getEventsForMonth(DateTime month) {
+    List<Map<String, dynamic>> monthEvents = [];
+    final int daysInMonth = DateTime(month.year, month.month + 1, 0).day;
+
+    for (int i = 1; i <= daysInMonth; i++) {
+      final day = DateTime(month.year, month.month, i);
+      final normalizedDay = DateTime(day.year, day.month, day.day);
+      if (_events.containsKey(normalizedDay)) {
+        monthEvents.addAll(_events[normalizedDay]!);
+      }
+    }
+    // Sort events by day for better readability
+    monthEvents.sort((a, b) {
+      final aDay = (a['day'] as int?) ?? 0;
+      final bDay = (b['day'] as int?) ?? 0;
+      return aDay.compareTo(bDay);
+    });
+    return monthEvents;
   }
 
   @override
@@ -90,30 +113,45 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
           }
 
           // Convert Firestore data to events
-          _events = {};
+          _events = {}; // Reset events map
           for (var doc in snapshot.data!.docs) {
             final data = doc.data() as Map<String, dynamic>;
             final day = data['day'] as int;
             final month = data['month'] as int;
             final year = data['year'] as int?;
-            DateTime date;
+
+            final eventDetails = {
+              'name': data['name'] as String,
+              'type': data['type'] as String,
+              'day': day,
+              'month': month,
+              'year': year,
+            };
+
             if (year != null) {
-              // Use the actual year if available
-              date = DateTime(year, month, day);
+              // Specific year event: add for that year only
+              final date = DateTime(year, month, day);
+              final normalizedDate = DateTime(date.year, date.month, date.day);
+              if (_events[normalizedDate] == null) {
+                _events[normalizedDate] = [eventDetails];
+              } else {
+                _events[normalizedDate]!.add(eventDetails);
+              }
             } else {
-              // If year is null, assume current year for displaying on calendar
-              // This will cause events from previous years to show on the current year's calendar
-              date = DateTime(_focusedDay.year, month, day);
-            }
-            final eventName = '${data['name']} (${data['type']})';
-
-            // Normalize date to remove time components for accurate mapping
-            final normalizedDate = DateTime(date.year, date.month, date.day);
-
-            if (_events[normalizedDate] == null) {
-              _events[normalizedDate] = [eventName];
-            } else {
-              _events[normalizedDate]!.add(eventName);
+              // Recurring event (no year): add for all years from current year to 2125
+              for (int y = DateTime.now().year; y <= 2125; y++) {
+                final date = DateTime(y, month, day);
+                final normalizedDate = DateTime(
+                  date.year,
+                  date.month,
+                  date.day,
+                );
+                if (_events[normalizedDate] == null) {
+                  _events[normalizedDate] = [eventDetails];
+                } else {
+                  _events[normalizedDate]!.add(eventDetails);
+                }
+              }
             }
           }
 
@@ -139,9 +177,11 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
                   });
                 },
                 onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
+                  setState(() {
+                    _focusedDay = focusedDay;
+                  });
                 },
-                eventLoader: _getEventsForDay,
+                eventLoader: (day) => _getEventsForDay(day),
                 calendarStyle: CalendarStyle(
                   todayDecoration: BoxDecoration(
                     color: Colors.blue.withOpacity(0.5),
@@ -155,6 +195,8 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
                     color: Colors.deepOrangeAccent,
                     shape: BoxShape.circle,
                   ),
+                  outsideDaysVisible:
+                      false, // Hide days from previous/next month
                 ),
                 headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
@@ -172,13 +214,31 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16.0), // Spazio tra calendario e titolo
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Eventi del Mese:',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+              ),
               const SizedBox(height: 8.0),
               Expanded(
                 child: ListView(
                   children:
-                      _getEventsForDay(
-                        _selectedDay ?? _focusedDay,
-                      ).map((event) => ListTile(title: Text(event))).toList(),
+                      _getEventsForMonth(_focusedDay).map((event) {
+                        final yearString =
+                            event['year'] != null ? '/${event['year']}' : '';
+                        final dateString =
+                            '${event['day']}/${event['month']}$yearString';
+                        return ListTile(
+                          title: Text('${event['name']} (${event['type']})'),
+                          subtitle: Text(dateString),
+                        );
+                      }).toList(),
                 ),
               ),
             ],
@@ -327,7 +387,7 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
       'name': name,
       'day': day,
       'month': month,
-      'year': year, // Will be null if not entered
+      'year': year,
       'type': _selectedType,
       'createdAt': Timestamp.now(),
       'updatedAt': Timestamp.now(),
