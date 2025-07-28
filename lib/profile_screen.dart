@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // You might need to import firebase_auth here later to show user details
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,6 @@ class ProfileScreen extends StatelessWidget {
               'Questa è la pagina del Profilo Utente.',
               style: TextStyle(fontSize: 18),
             ),
-            // TODO: Add user profile details here
-            // TODO: Add option to edit profile
           ],
         ),
       ),

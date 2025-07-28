@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationPage extends StatefulWidget {
-  const AuthenticationPage({Key? key}) : super(key: key);
+  const AuthenticationPage({super.key});
 
   @override
-  _AuthenticationPageState createState() => _AuthenticationPageState();
+  AuthenticationPageState createState() => AuthenticationPageState();
 }
 
-class _AuthenticationPageState extends State<AuthenticationPage> {
+class AuthenticationPageState extends State<AuthenticationPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -24,7 +24,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       setState(() {
         _message = 'Accesso effettuato con successo!';
       });
-      // TODO: Navigate to home page after successful login
     } on FirebaseAuthException catch (e) {
       setState(() {
         _message = 'Errore di accesso: ${e.message}';
@@ -45,7 +44,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       setState(() {
         _message = 'Registrazione effettuata con successo!';
       });
-      // TODO: Navigate to home page after successful registration
     } on FirebaseAuthException catch (e) {
       setState(() {
         _message = 'Errore di registrazione: ${e.message}';

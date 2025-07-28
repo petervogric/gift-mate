@@ -3,20 +3,19 @@ import 'important_dates_screen.dart'; // Import the important dates screen
 import 'profile_screen.dart'; // Import the profile screen (will create next)
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0; // Index of the currently selected tab
+class HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
 
   // List of screens to display in the bottom navigation bar
   final List<Widget> _screens = [
     const ImportantDatesScreen(), // Screen for important dates
     const ProfileScreen(),       // Screen for user profile (will create next)
-    // TODO: Add other screens here (e.g., Gift Ideas, Wishlist)
   ];
 
   // Function to handle tab changes
@@ -42,7 +41,6 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.person),
             label: 'Profilo',
           ),
-          // TODO: Add other navigation items here
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue, // Customize selected item color

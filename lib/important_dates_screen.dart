@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ImportantDatesScreen extends StatefulWidget {
-  const ImportantDatesScreen({super.key}); // Use super.key
+  const ImportantDatesScreen({super.key});
 
   @override
   _ImportantDatesScreenState createState() => _ImportantDatesScreenState();
@@ -85,7 +85,6 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
                  return ListTile(
                    title: Text(data['name'] ?? 'Nome sconosciuto'),
                    subtitle: Text('${data['type'] ?? 'Tipo sconosciuto'} - $day/$month$year'),
-                   // TODO: Add onTap for viewing/editing details
                  );
               } else {
                  // Handle cases where the document data is not in the expected format
@@ -139,7 +138,7 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
                 ),
                 TextField(
                   controller: _yearController,
-                  decoration: const InputDecoration(labelText: 'Anno (opzionale)'),
+                  decoration: const InputDecoration(labelText: 'Anno (opzionale'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
@@ -186,10 +185,11 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
   void _saveImportantDate(BuildContext context) async {
     final User? currentUser = _auth.currentUser;
     if (currentUser == null) {
-      // Should not happen here, but as a safeguard
-       ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(content: Text('Errore: Utente non autenticato.')),
-       );
+       if (mounted) { // Add mounted check here
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('Errore: Utente non autenticato.')),
+         );
+       }
       return;
     }
 
@@ -200,10 +200,22 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
 
     // Basic validation
     if (name.isEmpty || day == null || month == null || day < 1 || day > 31 || month < 1 || month > 12) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Per favore, inserisci nome, giorno e mese validi.')),
-      );
+       if (mounted) { // Add mounted check here
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('Per favore, inserisci nome, giorno e mese validi.')),
+         );
+       }
       return;
+    }
+
+    // More robust day validation based on the month
+    if (day > DateTime(DateTime.now().year, month + 1, 0).day) {
+       if (mounted) { // Add mounted check here
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('Giorno non valido per il mese selezionato.')),
+         );
+       }
+       return;
     }
 
     // Prepare data to save
@@ -225,17 +237,22 @@ class _ImportantDatesScreenState extends State<ImportantDatesScreen> {
           .collection('importantDates')
           .add(dateData); // Use .add() to let Firestore generate a unique ID
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data importante salvata con successo!')),
-      );
+      if (mounted) { // Add mounted check here
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data importante salvata con successo!')),
+        );
+      }
 
-      // Close the dialog after successful save
-      Navigator.of(context).pop();
+      if (mounted) { // Add mounted check here
+        Navigator.of(context).pop(); // Close the dialog after successful save
+      }
 
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore nel salvataggio della data: $e')),
-      );
+      if (mounted) { // Add mounted check here
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Errore nel salvataggio della data: $e')),
+        );
+      }
     }
   }
 }
