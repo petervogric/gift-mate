@@ -1,4 +1,4 @@
-# myapp
+# Gift Mate
 
 A new Flutter project.
 
